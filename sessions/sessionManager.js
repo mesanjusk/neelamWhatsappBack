@@ -23,6 +23,7 @@ const createClient = async (userId) => {
       '--disable-dev-shm-usage',
       '--disable-gpu',
       '--no-zygote',
+       '--disable-software-rasterizer',
       '--single-process'
     ],
   },
