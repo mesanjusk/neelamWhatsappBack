@@ -3,7 +3,7 @@ FROM node:20-slim
 
 # Install necessary dependencies, Chromium, and xvfb for virtual display
 RUN apt-get update && apt-get install -y \
-    chromium chromium-driver xvfb \
+    chromium chromium-driver xvfb xauth \
     fonts-liberation \
     libappindicator3-1 \
     libasound2 \
