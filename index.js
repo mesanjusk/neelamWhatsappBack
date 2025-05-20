@@ -24,7 +24,7 @@ const whatsappRouter = require('./routes/whatsapp');
 
 app.use(express.json());
 app.use('/api/whatsapp', whatsappRouter);
-
 initMongoStore().then(() => {
-  app.listen(5000, () => console.log('🚀 Server running on port 5000'));
+  const PORT = process.env.PORT || 5000; // ✅ Correct for Railway
+  app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
 });
