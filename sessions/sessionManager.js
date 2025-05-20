@@ -11,15 +11,23 @@ const createClient = async (userId) => {
   const store = getStore();
 
   const client = new Client({
-    authStrategy: new RemoteAuth({
-      store,
-      clientId: userId, // Unique per user
-    }),
-    puppeteer: {
-      headless: false,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    },
-  });
+  authStrategy: new RemoteAuth({
+    store,
+    clientId: userId, // Unique per user
+  }),
+  puppeteer: {
+    headless: true,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu',
+      '--no-zygote',
+      '--single-process'
+    ],
+  },
+});
+
 
   client.on('qr', async (qr) => {
     const qrData = await QRCode.toDataURL(qr);
