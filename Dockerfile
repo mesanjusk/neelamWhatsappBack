@@ -35,18 +35,18 @@ ENV DISPLAY=:99
 # Set working directory
 WORKDIR /app
 
-# Copy dependencies first (for caching)
+# Copy dependencies and install
 COPY package*.json ./
 RUN npm install
 
 # Copy rest of the code
 COPY . .
 
-# Expose the backend port
-EXPOSE 3000
+# Expose backend port (make sure it matches your app)
+EXPOSE 5000
 
 # Debug log
 RUN echo "Chromium path: $PUPPETEER_EXECUTABLE_PATH"
 
-# Run your app inside Xvfb virtual framebuffer
-CMD ["xvfb-run", "--server-args=-screen 0 1280x720x24", "node", "index.js"]
+# Start app using npm
+CMD ["npm", "start"]
