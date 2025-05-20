@@ -1,40 +1,53 @@
-# Use node base image with Chromium dependencies
+# Use official Node.js LTS image (slim variant)
 FROM node:18-slim
 
-# Install necessary dependencies for Puppeteer
+# Install necessary dependencies for Chromium + Puppeteer
 RUN apt-get update && apt-get install -y \
-    wget \
-    ca-certificates \
-    fonts-liberation \
-    libappindicator3-1 \
+    gconf-service \
     libasound2 \
-    libatk-bridge2.0-0 \
     libatk1.0-0 \
     libcups2 \
     libdbus-1-3 \
-    libgdk-pixbuf2.0-0 \
+    libexpat1 \
+    libfontconfig1 \
+    libgcc1 \
+    libgconf-2-4 \
+    libglib2.0-0 \
+    libgtk-3-0 \
     libnspr4 \
     libnss3 \
+    libpango-1.0-0 \
     libx11-xcb1 \
     libxcomposite1 \
     libxdamage1 \
     libxrandr2 \
+    ca-certificates \
+    fonts-liberation \
+    libappindicator3-1 \
+    libxss1 \
+    lsb-release \
     xdg-utils \
+    wget \
     --no-install-recommends && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/*
 
-# Set working directory
-WORKDIR /app
+# Set working directory in container
+WORKDIR /usr/src/app
 
-# Copy package files and install
+# Copy package.json and package-lock.json first (for caching)
 COPY package*.json ./
+
+# Install dependencies
 RUN npm install
 
-# Copy all project files
+# Copy the rest of your app code
 COPY . .
 
-# Expose app port
+# Puppeteer uses this env variable to find Chromium in container
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+
+# Expose your backend port (change if needed)
 EXPOSE 5000
 
-# Start app
+# Run your app
 CMD ["node", "index.js"]
