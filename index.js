@@ -1,4 +1,9 @@
 const express = require('express');
+const cors = require('cors');
+
+const app = express(); // ✅ Declare app FIRST
+
+// ✅ Then use it
 const allowedOrigins = [
   'http://localhost:3000',
   'https://whatsapp-sigma-bay.vercel.app'
@@ -13,13 +18,10 @@ app.use(cors({
   },
   credentials: true,
 }));
- 
+
 const { initMongoStore } = require('./mongoStore');
 const whatsappRouter = require('./routes/whatsapp');
 
-const app = express();
-
-app.use(cors()); 
 app.use(express.json());
 app.use('/api/whatsapp', whatsappRouter);
 
