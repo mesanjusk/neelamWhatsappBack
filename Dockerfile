@@ -1,9 +1,10 @@
-# Use official Node.js LTS image (Debian-based)
+# Dockerfile
 FROM node:18-slim
 
-# Install Chromium & dependencies for Puppeteer
+# Install dependencies for Chromium
 RUN apt-get update && apt-get install -y \
-  chromium \
+  wget \
+  ca-certificates \
   fonts-liberation \
   libappindicator3-1 \
   libasound2 \
@@ -11,9 +12,7 @@ RUN apt-get update && apt-get install -y \
   libatk1.0-0 \
   libcups2 \
   libdbus-1-3 \
-  libdrm2 \
-  libgbm1 \
-  libgtk-3-0 \
+  libgdk-pixbuf2.0-0 \
   libnspr4 \
   libnss3 \
   libx11-xcb1 \
@@ -22,25 +21,21 @@ RUN apt-get update && apt-get install -y \
   libxrandr2 \
   xdg-utils \
   --no-install-recommends && \
+  apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
-# Set Chromium path environment variable for puppeteer
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
-
 # Create app directory
-WORKDIR /usr/src/app
-
-# Copy package.json and package-lock.json
-COPY package*.json ./
-
-# Install app dependencies
-RUN npm install
-
-# Copy app source code
+WORKDIR /app
 COPY . .
 
-# Expose port your app uses (e.g. 5000)
-EXPOSE 5000
+# Install dependencies
+RUN npm install
+
+# Set environment variable to skip Puppeteer download if already installed
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+
+# Set Puppeteer executable path (used in your code if needed)
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome
 
 # Start the app
-CMD [ "node", "index.js" ]
+CMD ["node", "index.js"]

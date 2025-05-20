@@ -23,7 +23,7 @@ const createClient = async (userId) => {
         '--disable-gpu',
         '--no-zygote',
         '--single-process',
-        '--disable-software-rasterizer',
+        
       ],
       // Optionally specify chromium executable path if needed
       // executablePath: '/usr/bin/chromium-browser',
