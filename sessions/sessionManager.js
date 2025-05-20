@@ -16,38 +16,11 @@ const createClient = async (userId) => {
     backupSyncIntervalMs: 300000,
   }),
   puppeteer: {
-    headless: true, // important: must be true in server environments
-    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium',
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-gpu',
-      '--single-process',
-      '--no-zygote',
-      '--disable-background-networking',
-      '--disable-background-timer-throttling',
-      '--disable-backgrounding-occluded-windows',
-      '--disable-breakpad',
-      '--disable-client-side-phishing-detection',
-      '--disable-default-apps',
-      '--disable-extensions',
-      '--disable-features=site-per-process',
-      '--disable-hang-monitor',
-      '--disable-ipc-flooding-protection',
-      '--disable-popup-blocking',
-      '--disable-prompt-on-repost',
-      '--disable-renderer-backgrounding',
-      '--disable-sync',
-      '--metrics-recording-only',
-      '--no-first-run',
-      '--safebrowsing-disable-auto-update',
-      '--enable-automation',
-      '--password-store=basic',
-      '--use-mock-keychain',
-    ],
+    headless: true,  // or try true if xvfb doesn't work
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
   },
 });
+
 
 
 

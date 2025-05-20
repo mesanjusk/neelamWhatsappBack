@@ -1,9 +1,9 @@
 # Use slim Node.js image
 FROM node:20-slim
 
-# Install necessary dependencies and Chromium
+# Install necessary dependencies, Chromium, and xvfb for virtual display
 RUN apt-get update && apt-get install -y \
-    chromium chromium-driver \
+    chromium chromium-driver xvfb \
     fonts-liberation \
     libappindicator3-1 \
     libasound2 \
@@ -30,11 +30,12 @@ RUN apt-get update && apt-get install -y \
 # Let Puppeteer know to use system Chromium
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 ENV PUPPETEER_SKIP_DOWNLOAD=true
+ENV DISPLAY=:99
 
 # Set working directory
 WORKDIR /app
 
-# Copy dependencies first (for cache)
+# Copy dependencies first (for caching)
 COPY package*.json ./
 RUN npm install
 
@@ -47,5 +48,5 @@ EXPOSE 3000
 # Debug log
 RUN echo "Chromium path: $PUPPETEER_EXECUTABLE_PATH"
 
-# Start backend
-CMD ["node", "index.js"]
+# Run your app inside Xvfb virtual framebuffer
+CMD ["xvfb-run", "--server-args=-screen 0 1280x720x24", "node", "index.js"]
