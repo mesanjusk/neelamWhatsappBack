@@ -1,4 +1,3 @@
-// sessions/sessionManager.js
 const { Client, RemoteAuth } = require('whatsapp-web.js');
 const { getStore } = require('../mongoStore');
 const QRCode = require('qrcode');
@@ -11,24 +10,25 @@ const createClient = async (userId) => {
   const store = getStore();
 
   const client = new Client({
-  authStrategy: new RemoteAuth({
-    store,
-    clientId: userId, // Unique per user
-  }),
-  puppeteer: {
-    headless: true,
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-gpu',
-      '--no-zygote',
-       '--disable-software-rasterizer',
-      '--single-process'
-    ],
-  },
-});
-
+    authStrategy: new RemoteAuth({
+      store,
+      clientId: userId, // Unique per user
+    }),
+    puppeteer: {
+      headless: 'new', // Use modern headless mode
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+        '--no-zygote',
+        '--single-process',
+        '--disable-software-rasterizer',
+      ],
+      // Optionally specify chromium executable path if needed
+      // executablePath: '/usr/bin/chromium-browser',
+    },
+  });
 
   client.on('qr', async (qr) => {
     const qrData = await QRCode.toDataURL(qr);
