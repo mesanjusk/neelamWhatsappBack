@@ -3,7 +3,6 @@ const cors = require('cors');
 
 const app = express();
 
-// ✅ CORS config for Vercel frontend
 const allowedOrigins = [
   'http://localhost:3000',
   'https://whatsapp-sigma-bay.vercel.app'
@@ -19,23 +18,20 @@ app.use(cors({
   credentials: true,
 }));
 
-// ✅ Health check route
+app.use(express.json());
+
+// ✅ TEST ROUTE – add this block
 app.get('/api/whatsapp/ping', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-// ✅ JSON parser
-app.use(express.json());
-
-// ✅ Mongo and Routes
+// 👇 Load your real WhatsApp routes AFTER test route
 const { initMongoStore } = require('./mongoStore');
 const whatsappRouter = require('./routes/whatsapp');
 app.use('/api/whatsapp', whatsappRouter);
 
-// ✅ Start the server (dynamic port for Railway)
-const PORT = process.env.PORT || 5000;
+// 👇 Start server
 initMongoStore().then(() => {
-  app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-  });
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
 });
