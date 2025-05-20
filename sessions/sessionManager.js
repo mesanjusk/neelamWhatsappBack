@@ -16,6 +16,7 @@ const createClient = async (userId) => {
     }),
     puppeteer: {
       headless: 'new', // Use modern headless mode
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium',
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',

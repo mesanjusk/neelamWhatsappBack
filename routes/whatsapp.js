@@ -9,6 +9,8 @@ const clients = {};
 const qrCodes = {};    
 const readyStatus = {}; 
 
+console.log('Launching Puppeteer with executable:', process.env.PUPPETEER_EXECUTABLE_PATH);
+
 const createClient = (userId) => {
   if (clients[userId]) return clients[userId]; 
 
