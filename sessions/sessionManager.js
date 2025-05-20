@@ -10,26 +10,25 @@ const createClient = async (userId) => {
   const store = getStore();
 
   const client = new Client({
-    authStrategy: new RemoteAuth({
-      store,
-      clientId: userId, // Unique per user
-    }),
-    puppeteer: {
-      headless: 'new', // Use modern headless mode
-      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium',
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-gpu',
-        '--no-zygote',
-        '--single-process',
-        
-      ],
-      // Optionally specify chromium executable path if needed
-      // executablePath: '/usr/bin/chromium-browser',
-    },
-  });
+  authStrategy: new RemoteAuth({
+    store: getStore(),
+    clientId: userId,
+    backupSyncIntervalMs: 300000,
+  }),
+  puppeteer: {
+    headless: true, // must be true for server env
+    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium',
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu',
+      '--single-process',
+      '--no-zygote',
+    ],
+  },
+});
+
 
   client.on('qr', async (qr) => {
     const qrData = await QRCode.toDataURL(qr);
