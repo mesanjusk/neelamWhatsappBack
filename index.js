@@ -1,5 +1,19 @@
 const express = require('express');
-const cors = require('cors'); 
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://whatsapp-sigma-bay.vercel.app'
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true,
+}));
+ 
 const { initMongoStore } = require('./mongoStore');
 const whatsappRouter = require('./routes/whatsapp');
 
